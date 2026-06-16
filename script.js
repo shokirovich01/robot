@@ -1,147 +1,212 @@
-const pupil1=document.getElementById("pupil1");
-const pupil2=document.getElementById("pupil2");
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
 
-const robot=document.getElementById("robot");
-const speech=document.getElementById("speech");
-const mouth=document.getElementById("mouth");
-const heart=document.getElementById("heart");
-
-let clickCount=0;
-let sleepTimer;
+body{
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(
+135deg,
+#06131a,
+#0d2530,
+#102c38
+);
+}
 
 /* PARTICLES */
 
-const particles=document.getElementById("particles");
+#particles{
+position:fixed;
+inset:0;
+overflow:hidden;
+pointer-events:none;
+}
 
-for(let i=0;i<50;i++){
+.particle{
+position:absolute;
+width:4px;
+height:4px;
+border-radius:50%;
+background:#8fffe0;
+opacity:.5;
+animation:float linear infinite;
+}
 
-const p=document.createElement("div");
+@keyframes float{
 
-p.className="particle";
+from{
+transform:translateY(100vh);
+}
 
-p.style.left=Math.random()*100+"%";
-
-p.style.animationDuration=
-(5+Math.random()*10)+"s";
-
-particles.appendChild(p);
+to{
+transform:translateY(-100px);
+}
 
 }
 
-/* EYES */
+/* ROBOT */
 
-document.addEventListener("mousemove",(e)=>{
+.container{
+position:relative;
+text-align:center;
+}
 
-clearTimeout(sleepTimer);
+#speech{
+position:absolute;
+top:-80px;
+left:50%;
+transform:translateX(-50%);
+background:white;
+padding:12px 20px;
+border-radius:20px;
+font-weight:bold;
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+white-space:nowrap;
+}
 
-moveEye(pupil1,e);
-moveEye(pupil2,e);
+#heart{
+position:absolute;
+top:-130px;
+left:50%;
+transform:translateX(-50%);
+font-size:40px;
+opacity:0;
+}
 
-const rect=
-robot.getBoundingClientRect();
+.showHeart{
+animation:heartUp 2s forwards;
+}
 
-const centerX=
-rect.left+rect.width/2;
+@keyframes heartUp{
 
-const centerY=
-rect.top+rect.height/2;
+0%{
+opacity:1;
+transform:translateX(-50%) translateY(0);
+}
 
-const dx=e.clientX-centerX;
-const dy=e.clientY-centerY;
-
-const dist=
-Math.sqrt(dx*dx+dy*dy);
-
-if(dist<120){
-
-speech.innerText="😲 Juda yaqin!";
-
-mouth.style.width="20px";
-mouth.style.height="20px";
-mouth.style.borderRadius="50%";
-
-}else{
-
-speech.innerText="👀 Seni kuzatyapman";
-
-mouth.style.width="50px";
-mouth.style.height="6px";
-mouth.style.borderRadius="20px";
+100%{
+opacity:0;
+transform:translateX(-50%) translateY(-80px);
+}
 
 }
 
-sleepTimer=setTimeout(()=>{
-sleepMode();
-},5000);
+#robot{
+position:relative;
+animation:breathe 3s infinite ease-in-out;
+cursor:pointer;
+}
 
-});
+@keyframes breathe{
 
-function moveEye(pupil,e){
+0%,100%{
+transform:translateY(0);
+}
 
-const rect=
-pupil.parentElement.getBoundingClientRect();
-
-const x=e.clientX-(rect.left+15);
-const y=e.clientY-(rect.top+15);
-
-const angle=Math.atan2(y,x);
-
-const moveX=Math.cos(angle)*6;
-const moveY=Math.sin(angle)*6;
-
-pupil.style.transform=
-`translate(${moveX}px,${moveY}px)`;
+50%{
+transform:translateY(-8px);
+}
 
 }
 
-/* CLICK */
+/* HEAD */
 
-robot.addEventListener("click",()=>{
-
-clickCount++;
-
-showHeart();
-
-if(clickCount<5){
-
-speech.innerText="😂 Haha!";
-
-mouth.style.height="18px";
-mouth.style.borderRadius=
-"0 0 30px 30px";
-
-}else{
-
-speech.innerText="😡 Yetar endi!";
-
-mouth.style.height="4px";
-
+.head{
+width:180px;
+height:130px;
+background:#98f0d2;
+border:5px solid #3e8b73;
+border-radius:30px;
+position:relative;
+z-index:2;
 }
 
-});
-
-/* HEART */
-
-function showHeart(){
-
-heart.classList.remove("showHeart");
-
-setTimeout(()=>{
-heart.classList.add("showHeart");
-},50);
-
+.eyes{
+display:flex;
+justify-content:space-around;
+padding-top:40px;
 }
 
-/* SLEEP */
+.eye{
+width:30px;
+height:30px;
+background:white;
+border-radius:50%;
+position:relative;
+overflow:hidden;
+}
 
-function sleepMode(){
+.pupil{
+width:12px;
+height:12px;
+background:black;
+border-radius:50%;
+position:absolute;
+left:9px;
+top:9px;
+transition:.08s;
+}
 
-speech.innerText="😴 Zzzz...";
+#mouth{
+width:50px;
+height:6px;
+background:#333;
+margin:25px auto;
+border-radius:20px;
+transition:.3s;
+}
 
-pupil1.style.height="2px";
-pupil2.style.height="2px";
+/* BODY */
 
-pupil1.style.top="14px";
-pupil2.style.top="14px";
+.body{
+width:130px;
+height:150px;
+background:#6de0b9;
+border:5px solid #3e8b73;
+border-radius:30px;
+margin:auto;
+margin-top:-10px;
+}
+
+/* ARMS */
+
+.arms{
+position:absolute;
+top:120px;
+left:-25px;
+width:230px;
+display:flex;
+justify-content:space-between;
+z-index:1;
+}
+
+.arm{
+width:28px;
+height:90px;
+background:#6de0b9;
+border:5px solid #3e8b73;
+border-radius:30px;
+animation:wave 3s infinite;
+}
+
+.right{
+animation-delay:1.5s;
+}
+
+@keyframes wave{
+
+0%,100%{
+transform:rotate(0deg);
+}
+
+50%{
+transform:rotate(20deg);
+}
 
 }
